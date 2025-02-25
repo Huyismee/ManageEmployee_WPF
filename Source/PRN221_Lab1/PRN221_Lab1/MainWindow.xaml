@@ -1,0 +1,106 @@
+﻿<Window x:Class="PRN221_Lab1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PRN221_Lab1"
+        xmlns:vm="clr-namespace:PRN221_Lab1.ViewModels"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1500">
+    <!--<Window.Resources>
+        <vm:OrderViewModel x:Key="orderVM"></vm:OrderViewModel>
+    </Window.Resources>-->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <StackPanel>
+                <ComboBox HorizontalAlignment="Left"
+                          Margin="0,0,0,0"   
+                          VerticalAlignment="Top"   
+                          Width="120"
+                          ItemsSource="{Binding Path=Employees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding Path=CurEmployee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          DisplayMemberPath="LastName"
+                          SelectionChanged="OnContentChanged">
+                </ComboBox>
+            </StackPanel>
+            <Grid Margin="0,22,0,0">
+                <DataGrid Name="lbOrders" AutoGenerateColumns="False" ItemsSource="{Binding Path=Orders, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=CurOrder}"
+                          IsReadOnly="True"
+                          ColumnWidth="*">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Path=OrderId}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Employee" Binding="{Binding Path=Employee.LastName}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Customer" Binding="{Binding Path=Customer.ContactName}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Order Date" Binding="{Binding Path=OrderDate, StringFormat={}{0:dd/MM/yyyy}}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Shipped Date" Binding="{Binding Path=ShippedDate, StringFormat={}{0:dd/MM/yyyy}}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Required Date" Binding="{Binding Path=RequiredDate, StringFormat={}{0:dd/MM/yyyy}}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Total Price" Binding="{Binding Path=TotalPrice}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <lvc:CartesianChart Series="{Binding SeriesCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" LegendLocation="Left" Height="400">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Employee" Labels="{Binding Labels}"></lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Sold Apps" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <StackPanel>
+                    <ComboBox HorizontalAlignment="Left"
+                              Margin="0,0,0,0"   
+                              VerticalAlignment="Top"   
+                              Width="120"
+                              ItemsSource="{Binding Path=Employees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding Path=CurOrder.Employee, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="EmployeeId"
+                              DisplayMemberPath="LastName"
+                              SelectedValue="{Binding Path=CurEmployeeId, Mode=TwoWay}"
+                              SelectionChanged="OnContentChanged">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel>
+                    <ComboBox HorizontalAlignment="Left"
+                              Margin="0,0,0,0"   
+                              VerticalAlignment="Top"   
+                              Width="120"
+                              ItemsSource="{Binding Path=Customers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding Path=CurOrder.Customer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="CustomerId"
+                              DisplayMemberPath="ContactName"
+                              SelectedValue="{Binding Path=CurCustomerId, Mode=TwoWay}"
+                              SelectionChanged="OnContentChanged">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel>
+                    <DatePicker HorizontalAlignment="Left"
+                                Margin="0,0,0,20"   
+                                VerticalAlignment="Top"   
+                                Width="120"
+                                SelectedDate="{Binding ElementName=lbOrders, Path=SelectedItem.RequiredDate}">
+                    </DatePicker>
+                    <Button Content="Delete" Width="120" HorizontalAlignment="Left" Command="{Binding Path=DeleteOrdCommand}"/>
+                </StackPanel>
+                <!--<Button Content="Save to DB" Command="{Binding Path=SubmitCommand}"></Button>
+     <Button Content="Delete Item" Command="{Binding Path=DeleteObjCommand}"></Button>-->
+            </StackPanel>
+        </Grid>
+
+
+    </Grid>
+</Window>
